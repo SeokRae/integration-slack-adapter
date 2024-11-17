@@ -1,0 +1,10 @@
+slack:
+  uris:
+    conversations:
+      create: /conversations.create
+
+    messages:
+      post-message: /chat.postMessage
+    files:
+      upload: /files.upload
+

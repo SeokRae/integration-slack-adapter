@@ -1,0 +1,3 @@
+slack:
+  # 슬랙 API URL
+  domain: https://slack.com/api
