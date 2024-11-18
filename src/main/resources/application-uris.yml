@@ -2,6 +2,8 @@ slack:
   uris:
     conversations:
       create: /conversations.create
+      invite: /conversations.invite
+      list: /conversations.list
 
     messages:
       post-message: /chat.postMessage
