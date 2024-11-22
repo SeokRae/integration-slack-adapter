@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG_PATH" value="logs"/>
+    <property name="PROJECT_NAME" value="integration-slack-adapter"/>
+    <property name="LOG_FILE" value="${LOG_PATH}/${PROJECT_NAME}.log"/>
+    <property name="LOG_EVENT" value="${LOG_PATH}/event-%d{yyyy-MM-dd}.log"/>
+    <property name="ARCHIVED_LOG_FILE" value="${LOG_PATH}/${PROJECT_NAME}_%d{yyyyMMdd}.log"/>
+
+    <!-- %red([%thread])-->
+    <property name="STDOUT_FORMAT"
+              value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] %highlight([%-5level]) [%-45.45logger{39}.%-30.30method:%cyan(%-3.3line)] - [%X{transactionId}] %msg%n"/>
+
+    <!-- Console appender -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${STDOUT_FORMAT}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File appender with rolling policy -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${ARCHIVED_LOG_FILE}</fileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+            <!-- -->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${STDOUT_FORMAT}</pattern>
+        </encoder>
+    </appender>
+
+    <logger level="WARN" name="ch.qos.logback"/>
+    <!-- Set logging level for Tomcat packages -->
+    <logger name="org.apache.catalina" level="INFO"/>
+    <logger name="org.apache.coyote" level="INFO"/>
+    <logger name="org.apache.jasper" level="ERROR"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <!--        <appender-ref ref="FILE"/>-->
+    </root>
+</configuration>
