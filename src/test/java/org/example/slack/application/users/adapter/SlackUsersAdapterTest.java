@@ -1,6 +1,5 @@
 package org.example.slack.application.users.adapter;
 
-import org.example.slack.application.users.adapter.request.SlackLookUpByEmailRequest;
 import org.example.slack.application.users.adapter.response.SlackLookUpByEmailResponse;
 import org.example.slack.core.props.UserProperties;
 import org.junit.jupiter.api.DisplayName;
@@ -26,12 +25,10 @@ class SlackUsersAdapterTest {
   @Test
   void lookup_user_test() {
     // given
-    SlackLookUpByEmailRequest request = SlackLookUpByEmailRequest.builder()
-      .email(userProperties.getUsers().get(0).getEmail())
-      .build();
+    String email = userProperties.getUsers().get(0).getEmail();
 
     // when
-    SlackLookUpByEmailResponse slackLookUpByEmailResponse = slackUsersAdapter.lookUpByEmail(request);
+    SlackLookUpByEmailResponse slackLookUpByEmailResponse = slackUsersAdapter.lookupUserIdByEmail(email);
 
     // then
     assertThat(slackLookUpByEmailResponse)

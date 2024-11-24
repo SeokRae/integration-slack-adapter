@@ -16,7 +16,7 @@ import java.util.List;
 public class Block {
 
   public enum Type {
-    SECTION, DIVIDER, CONTEXT, ACTIONS, HEADER, IMAGE;
+    SECTION, DIVIDER, CONTEXT, ACTIONS, HEADER, IMAGE, RICH_TEXT;
 
     @JsonValue
     public String getType() {

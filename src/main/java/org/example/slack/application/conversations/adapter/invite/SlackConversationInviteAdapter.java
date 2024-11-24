@@ -1,10 +1,11 @@
-package org.example.slack.application.users.adapter;
+package org.example.slack.application.conversations.adapter.invite;
 
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.slack.application.conversations.adapter.invite.request.SlackConversationInviteRequest;
+import org.example.slack.application.conversations.adapter.invite.response.SlackConversationInviteResponse;
 import org.example.slack.application.messages.adapter.exception.SlackMessageException;
-import org.example.slack.application.users.adapter.response.SlackLookUpByEmailResponse;
 import org.example.slack.common.client.OkHttpClientTemplate;
 import org.example.slack.core.props.SlackProperties;
 import org.springframework.http.HttpHeaders;
@@ -13,26 +14,23 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-/**
- * <a href="https://api.slack.com/methods/users.lookupByEmail">users.lookupByEmail</a>
- */
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SlackUsersAdapter implements UserResolvable {
+public class SlackConversationInviteAdapter {
 
   private final OkHttpClientTemplate okHttpClientTemplate;
   private final SlackProperties slackProperties;
 
-  @Override
-  public SlackLookUpByEmailResponse lookupUserIdByEmail(String email) {
+  public SlackConversationInviteResponse inviteConversation(SlackConversationInviteRequest request) {
 
     Map<String, String> headers = createHeaders();
-    return okHttpClientTemplate.get(
-      "https://slack.com/api/users.lookupByEmail",
+
+    return okHttpClientTemplate.post(
+      "https://slack.com/api/conversations.invite",
       headers,
-      Map.of("email", email),
-      SlackLookUpByEmailResponse.class
+      request,
+      SlackConversationInviteResponse.class
     );
   }
 

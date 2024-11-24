@@ -1,3 +1,7 @@
 slack:
   informations:
     token: slack-dev-token
+  users:
+    - email: useremail
+      id:
+      name:

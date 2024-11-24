@@ -17,7 +17,7 @@ import lombok.ToString;
 public class Element {
 
   public enum Type {
-    BUTTON, IMAGE, DATEPICKER, STATIC_SELECT, OVERFLOW;
+    BUTTON, IMAGE, DATEPICKER, STATIC_SELECT, OVERFLOW, RICH_TEXT_SECTION;
 
     @JsonValue
     public String getType() {
