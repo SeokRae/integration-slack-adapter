@@ -9,7 +9,11 @@ import org.example.slack.application.conversations.adapter.invite.SlackConversat
 import org.example.slack.application.conversations.adapter.invite.request.SlackConversationInviteRequest;
 import org.example.slack.application.conversations.adapter.invite.response.SlackConversationInviteResponse;
 import org.example.slack.application.files.adapter.SlackFilesAdapter;
+import org.example.slack.application.files.adapter.request.SlackFileUploadRequest;
+import org.example.slack.application.files.adapter.response.SlackFileUploadResponse;
 import org.example.slack.application.messages.adapter.SlackMessagesAdapter;
+import org.example.slack.application.messages.adapter.request.SlackPostMessageRequest;
+import org.example.slack.application.messages.adapter.response.SlackMessageResponse;
 import org.example.slack.application.model.user.User;
 import org.example.slack.application.users.adapter.SlackUsersAdapter;
 import org.springframework.stereotype.Service;
@@ -43,11 +47,11 @@ public class SlackNotificationService {
     // 2. 사용자 초대
     inviteUsersToChannel(channelId, emails);
 
-//    // 3. 메시지 전송
-//    String threadTs = sendMessage(channelId, messageText);
-//
-//    // 4. 파일 업로드
-//    uploadFileToThread(channelId, filePath, threadTs);
+    // 3. 메시지 전송
+    String threadTs = sendMessage(channelId, messageText);
+
+    // 4. 파일 업로드
+    uploadFileToThread(channelId, filePath, threadTs);
   }
 
   private String createChannel(String channelName) {
@@ -72,19 +76,30 @@ public class SlackNotificationService {
     SlackConversationInviteResponse slackConversationInviteResponse = conversationInvite.inviteConversation(build);
 
   }
-//
-//  private String sendMessage(String channelId, String messageText) {
-//    var response = messageAdapter.postMessage(channelId, messageText);
-//    if (!response.isOk()) {
-//      throw new RuntimeException("Failed to send Slack message: " + response.getError());
-//    }
-//    return response.getTs(); // Thread Timestamp 반환
-//  }
-//
-//  private void uploadFileToThread(String channelId, String filePath, String threadTs) {
-//    var response = fileAdapter.uploadFile(channelId, filePath, "Uploaded Report", threadTs);
-//    if (!response.isOk()) {
-//      throw new RuntimeException("Failed to upload file to Slack: " + response.getError());
-//    }
-//  }
+
+  //
+  private String sendMessage(String channelId, String messageText) {
+
+    SlackPostMessageRequest postMessageRequest = SlackPostMessageRequest.builder()
+      .channel(channelId)
+      .text(messageText)
+      .build();
+
+    SlackMessageResponse slackMessageResponse = messageAdapter.sendMessage(postMessageRequest);
+    if (!slackMessageResponse.isOk()) {
+      throw new RuntimeException("Failed to send Slack message: " + slackMessageResponse.getError());
+    }
+    return slackMessageResponse.getTs(); // Thread Timestamp 반환
+  }
+
+  private void uploadFileToThread(String channelId, String filePath, String threadTs) {
+    SlackFileUploadRequest slackFileUploadRequest = SlackFileUploadRequest.builder()
+      .channelId(channelId)
+      .fileName(filePath)
+      .build();
+    SlackFileUploadResponse slackFileUploadResponse = fileAdapter.uploadFile(slackFileUploadRequest);
+    if (!slackFileUploadResponse.isOk()) {
+      throw new RuntimeException("Failed to upload file to Slack: " + slackFileUploadResponse.getError());
+    }
+  }
 }
